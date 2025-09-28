@@ -3,6 +3,7 @@ import API from "../services/api";
 import Modal from "react-modal";
 import styles from "./AdoptionRequests.module.css";
 import { useAuth } from "../context/AuthContext";
+import { downloadCSV, formatDataForCSV } from "../utils/csvExport";
 
 Modal.setAppElement("#root");
 
@@ -104,6 +105,11 @@ const AdoptionRequests = () => {
     }
   };
 
+  const exportToCSV = () => {
+    const csvData = formatDataForCSV(filteredRequests, "adoption-requests");
+    downloadCSV(csvData, "adoption_requests_report");
+  };
+
   if (loading) {
     return <div className={styles.loading}>Loading adoption requests...</div>;
   }
@@ -134,9 +140,18 @@ const AdoptionRequests = () => {
           />
         </div>
 
-        <button onClick={fetchRequests} className={styles.refreshBtn}>
-          Refresh
-        </button>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button onClick={fetchRequests} className={styles.refreshBtn}>
+            Refresh
+          </button>
+          <button
+            onClick={exportToCSV}
+            className={styles.refreshBtn}
+            style={{ background: "#28a745" }}
+          >
+            Export CSV
+          </button>
+        </div>
       </div>
 
       <div className={styles.stats}>

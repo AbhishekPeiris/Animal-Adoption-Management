@@ -3,6 +3,7 @@ import API from "../services/api";
 import Modal from "react-modal";
 import { useAuth } from "../context/AuthContext";
 import styles from "./Donations.module.css";
+import { downloadCSV, formatDataForCSV } from "../utils/csvExport";
 
 Modal.setAppElement("#root");
 
@@ -139,6 +140,11 @@ const Donations = () => {
         }
     };
 
+    const exportToCSV = () => {
+        const csvData = formatDataForCSV(donations, 'donations');
+        downloadCSV(csvData, 'donations_report');
+    };
+
     const isAdmin = user?.role === "ADMIN";
     const isStaff = user?.role === "STAFF";
     const canManage = isAdmin || isStaff;
@@ -171,6 +177,15 @@ const Donations = () => {
                 <button className={styles.refreshBtn} onClick={fetchDonations}>
                     Refresh
                 </button>
+                {canManage && (
+                    <button
+                        className={styles.refreshBtn}
+                        onClick={exportToCSV}
+                        style={{ background: "#28a745" }}
+                    >
+                        Export CSV
+                    </button>
+                )}
             </div>
 
             {/* Statistics for Admin/Staff */}

@@ -3,6 +3,7 @@ import API from "../services/api";
 import Modal from "react-modal";
 import styles from "./RescuedPet.module.css";
 import { useAuth } from "../context/AuthContext";
+import { downloadCSV, formatDataForCSV } from "../utils/csvExport";
 
 Modal.setAppElement("#root");
 
@@ -311,6 +312,11 @@ function RescuedPet() {
   const isVet = user?.role === "VET";
   const canEdit = isAdmin || isStaff || isVet;
 
+  const exportToCSV = () => {
+    const csvData = formatDataForCSV(filteredPets, 'rescued-pets');
+    downloadCSV(csvData, 'rescued_pets_report');
+  };
+
   return (
     <div className={styles.container}>
       <h1>Rescued Pets Management</h1>
@@ -332,6 +338,13 @@ function RescuedPet() {
             {showArchived ? "Hide Archived" : "Show Archived"}
           </button>
         )}
+        <button
+          className={styles.btn}
+          onClick={exportToCSV}
+          style={{ background: "#28a745" }}
+        >
+          Export CSV
+        </button>
       </div>
 
       <input

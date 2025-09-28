@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import API from "../../services/api";
 import { useAuth } from "../../context/AuthContext";
 import styles from "./volunteerReq.module.css";
+import { downloadCSV, formatDataForCSV } from "../../utils/csvExport";
 
 const VolunteerReq = () => {
   const { user } = useAuth();
@@ -68,7 +69,7 @@ const VolunteerReq = () => {
       console.error("Error updating volunteer:", error);
       alert(
         "Error updating volunteer: " +
-          (error.response?.data?.message || error.message)
+        (error.response?.data?.message || error.message)
       );
     }
   };
@@ -89,7 +90,7 @@ const VolunteerReq = () => {
       console.error("Error deleting volunteer:", error);
       alert(
         "Error deleting volunteer: " +
-          (error.response?.data?.message || error.message)
+        (error.response?.data?.message || error.message)
       );
     }
   };
@@ -123,6 +124,11 @@ const VolunteerReq = () => {
     }
   };
 
+  const exportToCSV = () => {
+    const csvData = formatDataForCSV(filteredVolunteers, "volunteers");
+    downloadCSV(csvData, "volunteers_report");
+  };
+
   if (loading) {
     return (
       <div className={styles.container}>
@@ -135,9 +141,18 @@ const VolunteerReq = () => {
     <div className={styles.container}>
       <div className={styles.header}>
         <h1>Volunteer Management</h1>
-        <button onClick={fetchVolunteers} className={styles.refreshBtn}>
-          Refresh
-        </button>
+        <div style={{ display: "flex", gap: "10px" }}>
+          <button onClick={fetchVolunteers} className={styles.refreshBtn}>
+            Refresh
+          </button>
+          <button
+            onClick={exportToCSV}
+            className={styles.refreshBtn}
+            style={{ background: "#28a745" }}
+          >
+            Export CSV
+          </button>
+        </div>
       </div>
 
       {/* Statistics */}
@@ -302,13 +317,13 @@ const VolunteerReq = () => {
                 )}
                 {(volunteer.status === "Inactive" ||
                   volunteer.status === "Suspended") && (
-                  <button
-                    onClick={() => deleteVolunteer(volunteer._id)}
-                    className={styles.deleteBtn}
-                  >
-                    Delete
-                  </button>
-                )}
+                    <button
+                      onClick={() => deleteVolunteer(volunteer._id)}
+                      className={styles.deleteBtn}
+                    >
+                      Delete
+                    </button>
+                  )}
               </div>
             </div>
           ))

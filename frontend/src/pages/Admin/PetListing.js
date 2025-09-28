@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import API from "../../services/api";
 import Modal from "react-modal";
 import styles from "./PetListing.module.css";
+import { downloadCSV, formatDataForCSV } from "../../utils/csvExport";
 
 Modal.setAppElement("#root");
 
@@ -183,6 +184,11 @@ function PetListing() {
     }
   };
 
+  const exportToCSV = () => {
+    const csvData = formatDataForCSV(filteredPets, "pets");
+    downloadCSV(csvData, "pet_listing_report");
+  };
+
   const getStatusBadgeClass = (status) => {
     switch (status) {
       case "Available":
@@ -218,6 +224,13 @@ function PetListing() {
           style={{ marginLeft: "10px", background: "#6c757d" }}
         >
           Refresh
+        </button>
+        <button
+          className={styles.btn}
+          onClick={exportToCSV}
+          style={{ marginLeft: "10px", background: "#28a745" }}
+        >
+          Export CSV
         </button>
       </div>
 
