@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import bcrypt from "bcryptjs";
 
 const userSchema = new mongoose.Schema(
   {
@@ -17,7 +18,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: [true, "Provide Email"],
       unique: true,
-      index: true, 
+      index: true,
     },
     password: {
       type: String,
@@ -28,7 +29,7 @@ const userSchema = new mongoose.Schema(
       default: "",
     },
     mobile: {
-      type: Number, 
+      type: Number,
       default: null,
     },
     forgot_password_otp: {
@@ -37,7 +38,7 @@ const userSchema = new mongoose.Schema(
     },
     forgot_password_expiry: {
       type: Date,
-      default: null, 
+      default: null,
     },
     refresh_token: {
       type: String,
@@ -59,7 +60,7 @@ const userSchema = new mongoose.Schema(
     },
     last_login_date: {
       type: Date,
-      default: null, 
+      default: null,
     },
     address_details: [
       {
@@ -102,4 +103,25 @@ userSchema.pre("save", async function (next) {
   }
 });
 
-export default mongoose.model("user", userSchema);
+// Hash password before saving
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+
+  try {
+    const salt = await bcrypt.genSalt(10);
+    this.password = await bcrypt.hash(this.password, salt);
+    next();
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Compare password method
+userSchema.methods.comparePassword = async function (candidatePassword) {
+  return bcrypt.compare(candidatePassword, this.password);
+};
+
+// Check if model already exists before creating it
+const User = mongoose.models.User || mongoose.model("User", userSchema);
+
+export default User;

@@ -20,6 +20,9 @@ const petProfileSchema = new mongoose.Schema(
           const prefix = res[1].toUpperCase();
           if (species === "Cat") return prefix === "C";
           if (species === "Dog") return prefix === "D";
+          // if (species === "Bird") return prefix === "B";
+          // if (species === "Rabbit") return prefix === "R";
+          // if (species === "Other") return prefix === "O";
           return false;
         },
         message:
@@ -44,6 +47,7 @@ const petProfileSchema = new mongoose.Schema(
     // Breed: 2–50 chars, letters/spaces/hyphens
     petBreed: {
       type: String,
+      required: true, // Add this line
       trim: true,
       minlength: 2,
       maxlength: 50,
@@ -79,13 +83,42 @@ const petProfileSchema = new mongoose.Schema(
       minlength: 10,
       maxlength: 500,
     },
-    // imageUrl removed per requirements
+    // Medical Info Summary
+    medicalInfo: {
+      healthStatus: {
+        type: String,
+        enum: ["Healthy", "Under Treatment", "Recovering", "Critical"],
+        default: "Healthy"
+      },
+      isVaccinated: { type: Boolean, default: false },
+      lastVetVisit: { type: Date },
+      vetNotes: { type: String, maxlength: 500, default: "" },
+      treatments: [{
+        type: String,
+        maxlength: 200
+      }],
+      vaccinations: [{
+        vaccine: { type: String, maxlength: 100 },
+        date: { type: Date },
+        nextDue: { type: Date }
+      }],
+      medicalRecordIds: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "MedicalRecord"
+      }]
+    },
+    // Images
+    images: [{ type: String }],
+    // Add imageUrl field
+    imageUrl: {
+      type: String,
+      default: "https://via.placeholder.com/300?text=Pet",
+    },
   },
   {
     timestamps: true,
   }
 );
 
-// imageUrl hook removed
-
-export default mongoose.model("PetProfile", petProfileSchema);
+// Check if model already exists before creating it
+export default mongoose.models.PetProfile || mongoose.model("PetProfile", petProfileSchema);

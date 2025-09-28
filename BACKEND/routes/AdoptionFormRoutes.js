@@ -13,16 +13,16 @@ const router = express.Router();
 // Create adoption form (any logged-in user)
 router.post("/", authenticate, createAdoptionFormController);
 
-// Get all adoption forms (admin only)
-router.get("/", authenticate, authorizeRoles("admin"), getAllAdoptionFormsController);
+// Get adoption forms (role-based: admin sees all, users see their own)
+router.get("/", authenticate, getAllAdoptionFormsController);
 
-// Get adoption form by ID (admin or adopter only)
+// Get adoption form by ID (admin or form owner)
 router.get("/:id", authenticate, getAdoptionFormByIdController);
 
-// Update adoption form (admin only)
-router.put("/:id", authenticate, authorizeRoles("admin"), updateAdoptionFormController);
+// Update adoption form (role-based permissions)
+router.put("/:id", authenticate, updateAdoptionFormController);
 
-// Delete adoption form (admin only)
-router.delete("/:id", authenticate, authorizeRoles("admin"), deleteAdoptionFormController);
+// Delete adoption form (role-based permissions)
+router.delete("/:id", authenticate, deleteAdoptionFormController);
 
 export default router;

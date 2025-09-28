@@ -13,7 +13,11 @@ export const createAdoptionFormService = async (formData) => {
 // Get all adoption forms
 export const getAllAdoptionFormsService = async () => {
   try {
-    return await AdoptionForm.find().populate("petId").lean();
+    return await AdoptionForm.find()
+      .populate("petId")
+      .populate("reviewedBy", "name")
+      .sort({ createdAt: -1 })
+      .lean();
   } catch (error) {
     throw new Error("Error fetching adoption forms: " + error.message);
   }
@@ -22,11 +26,27 @@ export const getAllAdoptionFormsService = async () => {
 // Get adoption form by ID
 export const getAdoptionFormByIdService = async (id) => {
   try {
-    const form = await AdoptionForm.findById(id).populate("petId").lean();
+    const form = await AdoptionForm.findById(id)
+      .populate("petId")
+      .populate("reviewedBy", "name")
+      .lean();
     if (!form) throw new Error("Form not found");
     return form;
   } catch (error) {
     throw new Error("Error fetching adoption form: " + error.message);
+  }
+};
+
+// Get adoption forms for a specific user
+export const getUserAdoptionFormsService = async (userId) => {
+  try {
+    return await AdoptionForm.find({ userId })
+      .populate("petId")
+      .populate("reviewedBy", "name")
+      .sort({ createdAt: -1 })
+      .lean();
+  } catch (error) {
+    throw new Error("Error fetching user adoption forms: " + error.message);
   }
 };
 

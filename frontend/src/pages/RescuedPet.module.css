@@ -78,6 +78,35 @@
   background: #218838;
 }
 
+/* New button styles */
+.btnSecondary {
+  background: #6c757d;
+  color: white;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.btnSecondary:hover {
+  background: #5a6268;
+}
+
+.btnWarning {
+  background: #ffc107;
+  color: #212529;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.btnWarning:hover {
+  background: #e0a800;
+}
+
 /* Search input */
 .searchInput {
   display: block;
@@ -138,8 +167,10 @@
   transform: translate(-50%, -50%);
   background: #f2f2f2;
   padding: 40px 30px;
-  width: 500px;
+  width: 600px;
   max-width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
   border-radius: 12px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
   z-index: 2001;
@@ -172,6 +203,17 @@
 .modalWindow textarea {
   resize: vertical;
   min-height: 60px;
+}
+
+/* Form enhancements */
+.formRow {
+  display: flex;
+  gap: 15px;
+}
+
+.formRow input,
+.formRow select {
+  flex: 1;
 }
 
 /* Modal buttons */
