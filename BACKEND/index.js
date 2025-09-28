@@ -12,6 +12,8 @@ import PetProfileRouter from "./routes/PetProfileRouter.js";
 import adoptionFormRouter from "./routes/AdoptionFormRoutes.js";
 import rescuedPetRouter from "./routes/RescuedPetRoutes.js";
 import ProductRouter from "./routes/ProductRoutes.js";
+import donationRouter from "./routes/DonationRoute.js";
+import VolunteerRouter from "./routes/VolunteerRoutes.js";
 
 // Import connectDB from config
 import connectDB from "./config/database.js";
@@ -39,8 +41,11 @@ app.use("/pet-profiles", PetProfileRouter);
 app.use("/adoption-forms", adoptionFormRouter);
 app.use("/rescued-pets", rescuedPetRouter);
 app.use("/products", ProductRouter);
+app.use("/api/donations", donationRouter);
+app.use("/api/volunteers", VolunteerRouter);
 
-
-app.listen (port, ()=> {console.log(`server is running on port ${port}`)});
+app.listen(port, () => {
+  console.log(`server is running on port ${port}`);
+});
 
 export default app;

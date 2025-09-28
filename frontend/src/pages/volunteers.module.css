@@ -1,0 +1,430 @@
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 20px auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.loginPrompt {
+  text-align: center;
+  padding: 40px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  margin: 20px 0;
+}
+
+.topBar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+}
+
+.registerBtn {
+  padding: 10px 20px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.editBtn {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.refreshBtn {
+  padding: 10px 20px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.registerBtn:hover { background-color: #218838; }
+.editBtn:hover { background-color: #0056b3; }
+.refreshBtn:hover { background-color: #5a6268; }
+
+/* My Profile Section */
+.myProfileSection {
+  margin-bottom: 30px;
+}
+
+.profileCard {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.profileHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.profileHeader h3 {
+  margin: 0;
+  color: #333;
+}
+
+.profileContent {
+  display: grid;
+  gap: 8px;
+}
+
+.profileContent > div {
+  font-size: 14px;
+}
+
+/* Status badges */
+.status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.active { background-color: #28a745; }
+.inactive { background-color: #6c757d; }
+.suspended { background-color: #dc3545; }
+.pendingapproval { background-color: #ffc107; color: #212529; }
+
+/* Statistics */
+.statsContainer {
+  margin-bottom: 30px;
+}
+
+.statsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.statCard {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  text-align: center;
+}
+
+.statCard h3 {
+  margin: 0 0 5px 0;
+  font-size: 28px;
+  color: #007bff;
+}
+
+.statCard p {
+  margin: 0;
+  color: #666;
+  font-size: 14px;
+}
+
+/* Volunteers Grid */
+.volunteersSection {
+  margin-bottom: 30px;
+}
+
+.loading {
+  text-align: center;
+  padding: 40px;
+  font-size: 16px;
+  color: #666;
+}
+
+.volunteersGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+}
+
+.volunteerCard {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border: 1px solid #e0e0e0;
+}
+
+.cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+.cardHeader h3 {
+  margin: 0;
+  color: #333;
+}
+
+.cardContent {
+  display: grid;
+  gap: 8px;
+}
+
+.cardContent > div {
+  font-size: 14px;
+}
+
+.noVolunteers {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  font-size: 16px;
+}
+
+/* Modal Styles */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  z-index: 1000;
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  border-radius: 8px;
+  width: 90%;
+  max-width: 800px;
+  max-height: 90vh;
+  overflow: auto;
+  z-index: 1001;
+}
+
+.modalContent {
+  padding: 0;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.modalHeader h2 {
+  margin: 0;
+  color: #333;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #666;
+}
+
+.volunteerForm {
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.formRow {
+  display: flex;
+  gap: 15px;
+}
+
+.formRow input,
+.formRow select {
+  flex: 1;
+}
+
+.volunteerForm input,
+.volunteerForm select,
+.volunteerForm textarea {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.volunteerForm textarea {
+  resize: vertical;
+  font-family: Arial, sans-serif;
+}
+
+/* Emergency Contact Section */
+.emergencySection {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.emergencySection h4 {
+  margin: 0 0 15px 0;
+  color: #495057;
+}
+
+/* Skills Section */
+.skillsSection {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.skillsSection h4 {
+  margin: 0 0 15px 0;
+  color: #495057;
+}
+
+.skillsGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 10px;
+}
+
+.skillLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.skillLabel input[type="checkbox"] {
+  margin: 0;
+}
+
+/* Availability Section */
+.availabilitySection {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.availabilitySection h4 {
+  margin: 0 0 15px 0;
+  color: #495057;
+}
+
+.dayAvailability {
+  margin-bottom: 15px;
+  padding: 10px;
+  background: white;
+  border-radius: 4px;
+}
+
+.dayLabel {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  cursor: pointer;
+}
+
+.timeSlots {
+  margin-left: 25px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 8px;
+}
+
+.timeSlotLabel {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.checkboxGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.checkboxGroup label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.modalActions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 20px;
+  border-top: 1px solid #eee;
+}
+
+.cancelBtn {
+  padding: 10px 20px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.cancelBtn:hover {
+  background-color: #5a6268;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .container {
+    width: 95%;
+    padding: 15px;
+  }
+  
+  .topBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  
+  .formRow {
+    flex-direction: column;
+  }
+  
+  .statsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  
+  .volunteersGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .skillsGrid {
+    grid-template-columns: 1fr;
+  }
+  
+  .timeSlots {
+    grid-template-columns: 1fr;
+    margin-left: 15px;
+  }
+}

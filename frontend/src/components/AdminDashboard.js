@@ -6,6 +6,7 @@ import PetListing from "../pages/Admin/PetListing";
 import EditProduct from "../pages/Admin";
 import UpdateProduct from "../pages/UpdateProduct";
 import AdoptionRequests from "../pages/AdoptionRequests";
+import DonationsReq from "../pages/Admin/DonationsReq";
 
 function AdminDashboard() {
   const location = useLocation();
@@ -33,6 +34,11 @@ function AdminDashboard() {
             Adoption Requests
           </button>
         </Link>
+        <Link to="/admin/donations-requests">
+          <button className={location.pathname === "/admin/donations-requests" ? styles.active : ""}>
+            Donations Requests
+          </button>
+        </Link>
       </aside>
 
       <main className={styles.content}>
@@ -43,6 +49,7 @@ function AdminDashboard() {
           <Route path="edit-product" element={<EditProduct />} />
           <Route path="update-product/:id" element={<UpdateProduct />} />
           <Route path="adoption-requests" element={<AdoptionRequests />} />
+          <Route path="donations-requests" element={<DonationsReq />} />
         </Routes>
       </main>
     </div>

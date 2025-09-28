@@ -16,6 +16,8 @@ import PetShop from "./pages/User.js";
 import AdminDashboard from "./components/AdminDashboard.js";
 import UpdateProduct from './pages/UpdateProduct.js';
 import EditProduct from './pages/Admin.js';
+import Donations from "./pages/Donations.js";
+import Volunteers from "./pages/Volunteers.js";
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
           <Route path="/rescued-pet" element={<RescuedPet />} />
           <Route path="/products" element={<PetShop />} />
           <Route path="/pet-adoption" element={<PetAdoption />} />
+          <Route path="/donations" element={<Donations />} />
+          <Route path="/volunteers" element={<Volunteers />} />
 
           <Route
             path="/admin/*"

@@ -1,7 +1,7 @@
 import React from "react";
 import { Navbar, Nav, Container } from "react-bootstrap";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { FaHome, FaUserPlus, FaBookMedical,FaPaw, FaUserCircle, FaHandHoldingMedical, FaShoppingCart } from "react-icons/fa";
+import { FaHome, FaUserPlus, FaBookMedical, FaPaw, FaUserCircle, FaHandHoldingMedical, FaShoppingCart, FaDonate, FaHandsHelping } from "react-icons/fa";
 import styles from "./Navbar.module.css";
 import { useAuth } from "../context/AuthContext";
 
@@ -33,12 +33,12 @@ function NavigationBar() {
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className={`ms-auto align-items-center ${styles.navContainer}`}>
             <Nav.Link as={Link} to="/products" className={`mx-3 d-flex align-items-center ${styles.navItem}`}>
-              <FaShoppingCart classname="me-1"/> Pet Shop
+              <FaShoppingCart classname="me-1" /> Pet Shop
             </Nav.Link>
             {!isAdmin && (
-            <Nav.Link as={Link} to="/rescued-pet" className={`mx-3 d-flex align-items-center ${styles.navItem}`}>
-              <FaHandHoldingMedical className="me-1" /> Rescued Diaries
-            </Nav.Link>
+              <Nav.Link as={Link} to="/rescued-pet" className={`mx-3 d-flex align-items-center ${styles.navItem}`}>
+                <FaHandHoldingMedical className="me-1" /> Rescued Diaries
+              </Nav.Link>
             )}
             <Nav.Link as={Link} to="/pet-adoption" className={`mx-3 d-flex align-items-center ${styles.navItem}`}>
               <FaPaw className="me-1" /> All Pets
@@ -50,6 +50,12 @@ function NavigationBar() {
 
             <Nav.Link as={Link} to="/medical-records" className={`mx-3 d-flex align-items-center ${styles.navItem}`}>
               <FaBookMedical className="me-1" /> Medical Records
+            </Nav.Link>
+            <Nav.Link as={Link} to="/donations" className={`mx-3 d-flex align-items-center ${styles.navItem}`}>
+              <FaDonate className="me-1" /> Donations
+            </Nav.Link>
+            <Nav.Link as={Link} to="/volunteers" className={`mx-3 d-flex align-items-center ${styles.navItem}`}>
+              <FaHandsHelping className="me-1" /> Volunteers
             </Nav.Link>
             {!isLoggedIn && !isRegisterPage && (
               <Nav.Link as={Link} to="/register" className={`mx-3 d-flex align-items-center ${styles.navItem}`}>
