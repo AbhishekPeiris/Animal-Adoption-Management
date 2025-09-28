@@ -161,8 +161,7 @@ function RescuedPet() {
     } catch (err) {
       console.error(err);
       alert(
-        `Error saving rescued pet record: ${
-          err.response?.data?.message || err.message
+        `Error saving rescued pet record: ${err.response?.data?.message || err.message
         }`
       );
     }
@@ -190,8 +189,7 @@ function RescuedPet() {
     } catch (err) {
       console.error(err);
       alert(
-        `Error adding medical record: ${
-          err.response?.data?.message || err.message
+        `Error adding medical record: ${err.response?.data?.message || err.message
         }`
       );
     }
@@ -208,8 +206,7 @@ function RescuedPet() {
     } catch (err) {
       console.error(err);
       alert(
-        `Error updating adoption readiness: ${
-          err.response?.data?.message || err.message
+        `Error updating adoption readiness: ${err.response?.data?.message || err.message
         }`
       );
     }
@@ -239,8 +236,7 @@ function RescuedPet() {
     } catch (err) {
       console.error(err);
       alert(
-        `Error deleting rescued pet: ${
-          err.response?.data?.message || err.message
+        `Error deleting rescued pet: ${err.response?.data?.message || err.message
         }`
       );
     }

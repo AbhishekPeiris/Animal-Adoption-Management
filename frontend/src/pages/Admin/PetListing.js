@@ -183,6 +183,19 @@ function PetListing() {
     }
   };
 
+  const getStatusBadgeClass = (status) => {
+    switch (status) {
+      case "Available":
+        return `${styles.statusBadge} ${styles.statusAvailable}`;
+      case "Pending":
+        return `${styles.statusBadge} ${styles.statusPending}`;
+      case "Adopted":
+        return `${styles.statusBadge} ${styles.statusAdopted}`;
+      default:
+        return styles.statusBadge;
+    }
+  };
+
   const filteredPets = (pets || []).filter((pet) => {
     const name = (pet?.petName ?? "").toLowerCase();
     const species = (pet?.petSpecies ?? "").toLowerCase();
@@ -193,7 +206,7 @@ function PetListing() {
 
   return (
     <div className={styles.container}>
-      <h1 className={styles.title}>Pet Listing</h1>
+      <h1 className={styles.title}>Pet Management</h1>
 
       <div className={styles.topBar}>
         <button className={styles.btn} onClick={openAddModal}>
@@ -202,7 +215,7 @@ function PetListing() {
         <button
           className={styles.btn}
           onClick={fetchPets}
-          style={{ marginLeft: "10px", backgroundColor: "#6c757d" }}
+          style={{ marginLeft: "10px", background: "#6c757d" }}
         >
           Refresh
         </button>
@@ -210,70 +223,81 @@ function PetListing() {
 
       <input
         type="text"
-        placeholder="Search by name, species, or breed"
+        placeholder="Search by name, species, or breed..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
         className={styles.searchInput}
       />
 
-      <table className={styles.recordsTable}>
-        <thead>
-          <tr>
-            <th>Pet ID</th>
-            <th>Name</th>
-            <th>Species</th>
-            <th>Breed</th>
-            <th>Age</th>
-            <th>Gender</th>
-            <th>Status</th>
-            <th>Description</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredPets.length > 0 ? (
-            filteredPets.map((pet) => (
-              <tr key={pet._id}>
-                <td>{pet.petId}</td>
-                <td>{pet.petName}</td>
-                <td>{pet.petSpecies}</td>
-                <td>{pet.petBreed}</td>
-                <td>{pet.petAge}</td>
-                <td>{pet.petGender}</td>
-                <td>{pet.petStatus}</td>
-                <td>{pet.petDescription}</td>
-                <td>
-                  <button
-                    className={`${styles.btn}`}
-                    onClick={() => openPetDetails(pet)}
-                    style={{ marginRight: 5, backgroundColor: "#17a2b8" }}
-                  >
-                    View Details
-                  </button>
-                  <button
-                    className={`${styles.btn} ${styles.editBtn}`}
-                    onClick={() => openEditModal(pet)}
-                  >
-                    Edit
-                  </button>
-                  <button
-                    className={`${styles.btn} ${styles.deleteBtn}`}
-                    onClick={() => deletePet(pet._id)}
-                  >
-                    Delete
-                  </button>
+      <div style={{ overflowX: "auto" }}>
+        <table className={styles.recordsTable}>
+          <thead>
+            <tr>
+              <th>Pet ID</th>
+              <th>Name</th>
+              <th>Species</th>
+              <th>Breed</th>
+              <th>Age</th>
+              <th>Gender</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            {filteredPets.length > 0 ? (
+              filteredPets.map((pet) => (
+                <tr key={pet._id}>
+                  <td data-label="Pet ID">{pet.petId}</td>
+                  <td data-label="Name">{pet.petName}</td>
+                  <td data-label="Species">{pet.petSpecies}</td>
+                  <td data-label="Breed">{pet.petBreed}</td>
+                  <td data-label="Age">{pet.petAge} yrs</td>
+                  <td data-label="Gender">{pet.petGender}</td>
+                  <td data-label="Status">
+                    <span className={getStatusBadgeClass(pet.petStatus)}>
+                      {pet.petStatus}
+                    </span>
+                  </td>
+                  <td data-label="Actions">
+                    <button
+                      className={`${styles.btn}`}
+                      onClick={() => openPetDetails(pet)}
+                      style={{
+                        marginRight: 5,
+                        background: "#17a2b8",
+                        padding: "6px 10px",
+                        fontSize: "12px",
+                      }}
+                    >
+                      View
+                    </button>
+                    <button
+                      className={`${styles.btn} ${styles.editBtn}`}
+                      onClick={() => openEditModal(pet)}
+                      style={{ fontSize: "12px" }}
+                    >
+                      Edit
+                    </button>
+                    <button
+                      className={`${styles.btn} ${styles.deleteBtn}`}
+                      onClick={() => deletePet(pet._id)}
+                      style={{ fontSize: "12px" }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan="8" className={styles.noRecords}>
+                  No pets found matching your search
                 </td>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan="9" className={styles.noRecords}>
-                No pets found
-              </td>
-            </tr>
-          )}
-        </tbody>
-      </table>
+            )}
+          </tbody>
+        </table>
+      </div>
 
       {/* Pet Details Modal */}
       <Modal
@@ -290,17 +314,13 @@ function PetListing() {
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
-                marginBottom: 20,
+                marginBottom: 25,
               }}
             >
-              <h2>{viewPetDetails.petName} - Full Details</h2>
+              <h2 className={styles.modalTitle}>{viewPetDetails.petName}</h2>
               <button
                 onClick={() => setIsDetailsOpen(false)}
-                style={{
-                  background: "none",
-                  border: "none",
-                  fontSize: 20,
-                }}
+                className={styles.closeButton}
               >
                 ×
               </button>
@@ -312,69 +332,91 @@ function PetListing() {
                 alt={viewPetDetails.petName}
                 style={{
                   width: "100%",
-                  maxHeight: 200,
+                  maxHeight: 250,
                   objectFit: "cover",
-                  borderRadius: 8,
-                  marginBottom: 15,
+                  borderRadius: 4,
+                  marginBottom: 20,
+                  border: "1px solid #dee2e6",
                 }}
               />
             )}
 
-            <div
-              style={{
-                display: "grid",
-                gap: 10,
-                marginBottom: 20,
-              }}
-            >
-              <div>
-                <strong>Pet ID:</strong> {viewPetDetails.petId}
+            <div className={styles.petDetailsGrid}>
+              <div className={styles.detailCard}>
+                <div className={styles.detailLabel}>Pet ID</div>
+                <div className={styles.detailValue}>{viewPetDetails.petId}</div>
               </div>
-              <div>
-                <strong>Species:</strong> {viewPetDetails.petSpecies}
+              <div className={styles.detailCard}>
+                <div className={styles.detailLabel}>Species</div>
+                <div className={styles.detailValue}>
+                  {viewPetDetails.petSpecies}
+                </div>
               </div>
-              <div>
-                <strong>Breed:</strong> {viewPetDetails.petBreed}
+              <div className={styles.detailCard}>
+                <div className={styles.detailLabel}>Breed</div>
+                <div className={styles.detailValue}>
+                  {viewPetDetails.petBreed}
+                </div>
               </div>
-              <div>
-                <strong>Age:</strong> {viewPetDetails.petAge} years
+              <div className={styles.detailCard}>
+                <div className={styles.detailLabel}>Age</div>
+                <div className={styles.detailValue}>
+                  {viewPetDetails.petAge} years
+                </div>
               </div>
-              <div>
-                <strong>Gender:</strong> {viewPetDetails.petGender}
+              <div className={styles.detailCard}>
+                <div className={styles.detailLabel}>Gender</div>
+                <div className={styles.detailValue}>
+                  {viewPetDetails.petGender}
+                </div>
               </div>
-              <div>
-                <strong>Status:</strong> {viewPetDetails.petStatus}
-              </div>
-              <div>
-                <strong>Description:</strong> {viewPetDetails.petDescription}
+              <div className={styles.detailCard}>
+                <div className={styles.detailLabel}>Status</div>
+                <div className={styles.detailValue}>
+                  <span
+                    className={getStatusBadgeClass(viewPetDetails.petStatus)}
+                  >
+                    {viewPetDetails.petStatus}
+                  </span>
+                </div>
               </div>
             </div>
 
-            {viewPetDetails.medicalInfo && (
+            <div className={styles.descriptionCard}>
               <div
-                style={{
-                  marginBottom: 20,
-                  padding: 15,
-                  backgroundColor: "#f8f9fa",
-                  borderRadius: 8,
-                }}
+                className={styles.detailLabel}
+                style={{ marginBottom: "10px" }}
               >
+                Description
+              </div>
+              <p style={{ margin: 0, lineHeight: "1.5", color: "#6c757d" }}>
+                {viewPetDetails.petDescription}
+              </p>
+            </div>
+
+            {viewPetDetails.medicalInfo && (
+              <div className={styles.medicalSection}>
                 <h4>Medical Information</h4>
                 <div>
-                  <strong>Health Status:</strong> {viewPetDetails.medicalInfo.healthStatus}
+                  <strong>Health Status:</strong>{" "}
+                  {viewPetDetails.medicalInfo.healthStatus}
                 </div>
                 <div>
-                  <strong>Vaccinated:</strong> {viewPetDetails.medicalInfo.isVaccinated ? "Yes" : "No"}
+                  <strong>Vaccinated:</strong>{" "}
+                  {viewPetDetails.medicalInfo.isVaccinated ? "Yes" : "No"}
                 </div>
                 {viewPetDetails.medicalInfo.lastVetVisit && (
                   <div>
                     <strong>Last Vet Visit:</strong>{" "}
-                    {new Date(viewPetDetails.medicalInfo.lastVetVisit).toLocaleDateString()}
+                    {new Date(
+                      viewPetDetails.medicalInfo.lastVetVisit
+                    ).toLocaleDateString()}
                   </div>
                 )}
                 {viewPetDetails.medicalInfo.vetNotes && (
                   <div>
-                    <strong>Vet Notes:</strong> {viewPetDetails.medicalInfo.vetNotes}
+                    <strong>Vet Notes:</strong>{" "}
+                    {viewPetDetails.medicalInfo.vetNotes}
                   </div>
                 )}
               </div>
@@ -385,15 +427,7 @@ function PetListing() {
                 <div style={{ marginBottom: 20 }}>
                   <h4>Medical Records & Vaccinations</h4>
                   {viewPetDetails.medicalRecords.map((record, index) => (
-                    <div
-                      key={index}
-                      style={{
-                        padding: 10,
-                        margin: "5px 0",
-                        backgroundColor: "#e9ecef",
-                        borderRadius: 5,
-                      }}
-                    >
+                    <div key={index} className={styles.medicalRecord}>
                       <div>
                         <strong>Vaccination:</strong> {record.vaccination}
                       </div>
@@ -414,13 +448,19 @@ function PetListing() {
               )}
 
             <div className={styles.modalButtons}>
-              <button className={styles.btn} onClick={() => setIsDetailsOpen(false)}>
+              <button
+                className={styles.btn}
+                onClick={() => setIsDetailsOpen(false)}
+                style={{ background: "#6c757d" }}
+              >
                 Close
               </button>
             </div>
           </div>
         ) : (
-          <div>Loading...</div>
+          <div style={{ textAlign: "center", padding: "40px" }}>
+            Loading pet details...
+          </div>
         )}
       </Modal>
 
@@ -431,8 +471,10 @@ function PetListing() {
         className={styles.petModal}
         overlayClassName={styles.petOverlay}
       >
-        <h2>{editingPetId ? "Edit" : "Add New"} Pet</h2>
-        <form onSubmit={handleSubmit}>
+        <h2 className={styles.modalTitle}>
+          {editingPetId ? "Edit Pet" : "Add New Pet"}
+        </h2>
+        <form onSubmit={handleSubmit} className={styles.modalForm}>
           {editingPetId && (
             <input
               type="text"
@@ -440,7 +482,8 @@ function PetListing() {
               value={pets.find((p) => p._id === editingPetId)?.petId || ""}
               disabled
               readOnly
-              style={{ background: "#eee", marginBottom: 10 }}
+              className={styles.modalInput}
+              style={{ background: "#e9ecef", color: "#6c757d" }}
             />
           )}
           <input
@@ -453,12 +496,14 @@ function PetListing() {
             minLength={2}
             maxLength={50}
             pattern="^[A-Za-z\s-]+$"
+            className={styles.modalInput}
           />
           <select
             name="petSpecies"
             value={formData.petSpecies}
             onChange={handleChange}
             required
+            className={styles.modalSelect}
           >
             <option value="Cat">Cat</option>
             <option value="Dog">Dog</option>
@@ -470,6 +515,7 @@ function PetListing() {
             value={formData.petBreed}
             onChange={handleChange}
             required
+            className={styles.modalInput}
           />
           <input
             type="number"
@@ -478,12 +524,14 @@ function PetListing() {
             value={formData.petAge}
             onChange={handleChange}
             required
+            className={styles.modalInput}
           />
           <select
             name="petGender"
             value={formData.petGender}
             onChange={handleChange}
             required
+            className={styles.modalSelect}
           >
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -493,6 +541,7 @@ function PetListing() {
             value={formData.petStatus}
             onChange={handleChange}
             required
+            className={styles.modalSelect}
           >
             <option value="Available">Available</option>
             <option value="Pending">Pending</option>
@@ -504,6 +553,7 @@ function PetListing() {
             value={formData.petDescription}
             onChange={handleChange}
             required
+            className={styles.modalTextarea}
           />
           <input
             type="url"
@@ -511,15 +561,16 @@ function PetListing() {
             placeholder="Image URL (optional)"
             value={formData.imageUrl}
             onChange={handleChange}
+            className={styles.modalInput}
           />
 
           <div className={styles.modalButtons}>
             <button type="submit" className={styles.btn}>
-              {editingPetId ? "Update" : "Submit"}
+              {editingPetId ? "Update Pet" : "Add Pet"}
             </button>
             <button
               type="button"
-              className={`${styles.btn} ${styles.deleteBtn}`}
+              className={`${styles.modalBtn} ${styles.modalBtnDanger}`}
               onClick={() => setIsModalOpen(false)}
             >
               Cancel
