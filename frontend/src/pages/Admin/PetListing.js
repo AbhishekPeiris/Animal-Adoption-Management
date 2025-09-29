@@ -3,6 +3,7 @@ import API from "../../services/api";
 import Modal from "react-modal";
 import styles from "./PetListing.module.css";
 import { downloadCSV, formatDataForCSV } from "../../utils/csvExport";
+import { useAuth } from "../../context/AuthContext";
 
 Modal.setAppElement("#root");
 
@@ -13,6 +14,7 @@ function PetListing() {
   const [editingPetId, setEditingPetId] = useState(null);
   const [viewPetDetails, setViewPetDetails] = useState(null);
   const [isDetailsOpen, setIsDetailsOpen] = useState(false);
+  const { user } = useAuth();
 
   const [formData, setFormData] = useState({
     petName: "",
@@ -225,13 +227,16 @@ function PetListing() {
         >
           Refresh
         </button>
-        <button
-          className={styles.btn}
-          onClick={exportToCSV}
-          style={{ marginLeft: "10px", background: "#28a745" }}
-        >
-          Export CSV
-        </button>
+        {/* Export CSV only for admin */}
+        {user?.role === "ADMIN" && (
+          <button
+            className={styles.btn}
+            onClick={exportToCSV}
+            style={{ marginLeft: "10px", background: "#28a745" }}
+          >
+            Export CSV
+          </button>
+        )}
       </div>
 
       <input

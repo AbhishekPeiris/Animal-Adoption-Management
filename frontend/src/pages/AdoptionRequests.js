@@ -144,13 +144,16 @@ const AdoptionRequests = () => {
           <button onClick={fetchRequests} className={styles.refreshBtn}>
             Refresh
           </button>
-          <button
-            onClick={exportToCSV}
-            className={styles.refreshBtn}
-            style={{ background: "#28a745" }}
-          >
-            Export CSV
-          </button>
+          {/* Export CSV only for admin */}
+          {user?.role === "ADMIN" && (
+            <button
+              onClick={exportToCSV}
+              className={styles.refreshBtn}
+              style={{ background: "#28a745" }}
+            >
+              Export CSV
+            </button>
+          )}
         </div>
       </div>
 

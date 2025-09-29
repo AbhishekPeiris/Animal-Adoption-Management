@@ -18,6 +18,7 @@ function RescuedPet() {
   const [showArchived, setShowArchived] = useState(false);
   const [viewPet, setViewPet] = useState(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [filterStatus, setFilterStatus] = useState("All");
 
   const [formData, setFormData] = useState({
     rescuedPetName: "",
@@ -303,8 +304,13 @@ function RescuedPet() {
   const filteredPets = (pets || []).filter((pet) => {
     const id = (pet?.rescuedPetId ?? "").toString().toLowerCase();
     const name = (pet?.rescuedPetName ?? "").toString().toLowerCase();
+    const species = (pet?.species ?? "").toString().toLowerCase();
     const q = (search ?? "").toLowerCase();
-    return id.includes(q) || name.includes(q);
+
+    const matchesSearch = id.includes(q) || name.includes(q) || species.includes(q);
+    const matchesFilter = filterStatus === "All" || pet.adoptionStatus === filterStatus;
+
+    return matchesSearch && matchesFilter;
   });
 
   const isAdmin = user?.role === "ADMIN";
@@ -317,6 +323,209 @@ function RescuedPet() {
     downloadCSV(csvData, 'rescued_pets_report');
   };
 
+  // Client view - Card layout
+  if (!canEdit) {
+    return (
+      <div className={styles.container}>
+        <h1>Rescued Pets - Find Your New Best Friend</h1>
+        <p className={styles.subtitle}>
+          These amazing animals have been rescued and are looking for loving homes.
+          Each pet has received proper medical care and is ready for adoption.
+        </p>
+
+        {/* Search and Filter */}
+        <div className={styles.clientControls}>
+          <input
+            type="text"
+            placeholder="Search by name, ID, or species..."
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+            className={styles.searchInput}
+          />
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            className={styles.filterSelect}
+          >
+            <option value="All">All Pets</option>
+            <option value="Available">Available for Adoption</option>
+            <option value="Under Treatment">Under Treatment</option>
+            <option value="Adopted">Recently Adopted</option>
+          </select>
+        </div>
+
+        {/* Pet Cards Grid */}
+        <div className={styles.petCardsGrid}>
+          {filteredPets.length > 0 ? (
+            filteredPets.map((pet) => (
+              <div key={pet._id} className={styles.petCard}>
+                <div className={styles.petImageContainer}>
+                  <img
+                    src={pet.imageUrl || "https://via.placeholder.com/300x200?text=Rescued+Pet"}
+                    alt={pet.rescuedPetName}
+                    className={styles.petImage}
+                  />
+                  <div className={styles.statusOverlay}>
+                    <span className={`${styles.statusBadge} ${styles[pet.adoptionStatus?.replace(/\s+/g, '').toLowerCase()]}`}>
+                      {pet.adoptionStatus}
+                    </span>
+                  </div>
+                </div>
+
+                <div className={styles.petCardContent}>
+                  <h3 className={styles.petName}>{pet.rescuedPetName}</h3>
+                  <div className={styles.petDetails}>
+                    <div className={styles.petDetailItem}>
+                      <span className={styles.detailLabel}>Species:</span>
+                      <span className={styles.detailValue}>{pet.species}</span>
+                    </div>
+                    <div className={styles.petDetailItem}>
+                      <span className={styles.detailLabel}>Breed:</span>
+                      <span className={styles.detailValue}>{pet.breed}</span>
+                    </div>
+                    <div className={styles.petDetailItem}>
+                      <span className={styles.detailLabel}>Age:</span>
+                      <span className={styles.detailValue}>{pet.rescuedPetAge} years</span>
+                    </div>
+                    <div className={styles.petDetailItem}>
+                      <span className={styles.detailLabel}>Gender:</span>
+                      <span className={styles.detailValue}>{pet.rescuedPetGender}</span>
+                    </div>
+                    <div className={styles.petDetailItem}>
+                      <span className={styles.detailLabel}>Health:</span>
+                      <span className={styles.detailValue}>{pet.healthStatus}</span>
+                    </div>
+                  </div>
+
+                  <p className={styles.petDescription}>
+                    {pet.description?.length > 100
+                      ? `${pet.description.substring(0, 100)}...`
+                      : pet.description
+                    }
+                  </p>
+
+                  <div className={styles.petMeta}>
+                    <span className={styles.rescueDate}>
+                      Rescued: {new Date(pet.rescuedDate).toLocaleDateString()}
+                    </span>
+                    {pet.rescueLocation && (
+                      <span className={styles.rescueLocation}>
+                        From: {pet.rescueLocation}
+                      </span>
+                    )}
+                  </div>
+
+                  <div className={styles.cardActions}>
+                    <button
+                      className={styles.learnMoreBtn}
+                      onClick={() => openViewModal(pet)}
+                    >
+                      Learn More
+                    </button>
+                    {pet.adoptionStatus === "Available" && pet.adoptionReadiness === "Ready" && (
+                      <button className={styles.adoptBtn}>
+                        Interested in Adopting
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className={styles.noPetsFound}>
+              <h3>No pets found</h3>
+              <p>Try adjusting your search or filter criteria.</p>
+            </div>
+          )}
+        </div>
+
+        {/* Pet Details Modal for Clients */}
+        <Modal
+          isOpen={isViewModalOpen}
+          onRequestClose={() => setIsViewModalOpen(false)}
+          contentLabel="Pet Details"
+          className={styles.clientModal}
+          overlayClassName={styles.modalOverlay}
+        >
+          {viewPet ? (
+            <div className={styles.clientModalContent}>
+              <div className={styles.modalHeader}>
+                <h2>{viewPet.rescuedPetName}</h2>
+                <button
+                  onClick={() => setIsViewModalOpen(false)}
+                  className={styles.closeBtn}
+                >
+                  ×
+                </button>
+              </div>
+
+              <div className={styles.modalBody}>
+                {viewPet.imageUrl && (
+                  <img
+                    src={viewPet.imageUrl}
+                    alt={viewPet.rescuedPetName}
+                    className={styles.modalPetImage}
+                  />
+                )}
+
+                <div className={styles.petInfo}>
+                  <div className={styles.infoSection}>
+                    <h3>Basic Information</h3>
+                    <div className={styles.infoGrid}>
+                      <div><strong>Species:</strong> {viewPet.species}</div>
+                      <div><strong>Breed:</strong> {viewPet.breed}</div>
+                      <div><strong>Age:</strong> {viewPet.rescuedPetAge} years</div>
+                      <div><strong>Gender:</strong> {viewPet.rescuedPetGender}</div>
+                      <div><strong>Health Status:</strong> {viewPet.healthStatus}</div>
+                      <div><strong>Adoption Status:</strong>
+                        <span className={`${styles.statusBadge} ${styles[viewPet.adoptionStatus?.replace(/\s+/g, '').toLowerCase()]}`}>
+                          {viewPet.adoptionStatus}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className={styles.infoSection}>
+                    <h3>About {viewPet.rescuedPetName}</h3>
+                    <p>{viewPet.description}</p>
+                  </div>
+
+                  <div className={styles.infoSection}>
+                    <h3>Rescue Story</h3>
+                    <div className={styles.rescueStory}>
+                      <p><strong>Rescue Date:</strong> {new Date(viewPet.rescuedDate).toLocaleDateString()}</p>
+                      <p><strong>Rescue Location:</strong> {viewPet.rescueLocation}</p>
+                      <p><strong>Initial Condition:</strong> {viewPet.initialCondition}</p>
+                      {viewPet.recoveryProgress && (
+                        <p><strong>Recovery Progress:</strong> {viewPet.recoveryProgress}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  {viewPet.adoptionStatus === "Available" && viewPet.adoptionReadiness === "Ready" && (
+                    <div className={styles.adoptionSection}>
+                      <h3>Ready for Adoption!</h3>
+                      <p>
+                        {viewPet.rescuedPetName} has completed medical treatment and is ready
+                        for a loving home. Contact us to learn more about the adoption process.
+                      </p>
+                      <button className={styles.contactBtn}>
+                        Contact About Adoption
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <div className={styles.loading}>Loading pet details...</div>
+          )}
+        </Modal>
+      </div>
+    );
+  }
+
+  // Admin view - existing table layout
   return (
     <div className={styles.container}>
       <h1>Rescued Pets Management</h1>
@@ -338,13 +547,16 @@ function RescuedPet() {
             {showArchived ? "Hide Archived" : "Show Archived"}
           </button>
         )}
-        <button
-          className={styles.btn}
-          onClick={exportToCSV}
-          style={{ background: "#28a745" }}
-        >
-          Export CSV
-        </button>
+        {/* Export CSV only for admin */}
+        {user?.role === "ADMIN" && (
+          <button
+            className={styles.btn}
+            onClick={exportToCSV}
+            style={{ background: "#28a745" }}
+          >
+            Export CSV
+          </button>
+        )}
       </div>
 
       <input
